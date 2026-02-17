@@ -1,0 +1,69 @@
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1>Listado de Ambientes de Formación</h1>
+    <table class="ui fixed single line celled table">
+        <thead>
+            <tr>
+                <th>Nombre Ambiente</th>
+                <th>Tipo Ambiente</th>
+                <th>Observaciones</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ambiente in ambientes %}
+            <tr>
+                <td>{{ ambiente.1 }}</td>
+                <td>{{ ambiente.2 }}</td>
+                <td>{{ ambiente.3 }}</td>
+                <td>
+                    <form action="/Ambientes/EliminarAmbiente" method="post" id="formulario{{ ambiente.0 }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ ambiente.0 }}">
+                    </form>
+                    <a href="/Ambientes/ActualizarAmbiente/{{ ambiente.0 }}"><i class="edit icon"></i></a>
+                    <a href="#" onclick="eliminarambiente('{{ ambiente.0 }}')"><i class="trash icon"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+INICIO DE VENTANA MODAL
+
+<script>
+    function eliminarambiente(id) {
+        Swal.fire({
+            title: "Cuidado. seguro de eliminar esto?",
+            text: "Pienselo, ¡después no hay vuelta atrás!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("formulario" + id).submit();
+            }
+        });
+    }
+</script>
+
+<br>
+
+{% if messages %}
+{% for mensaje in messages %}
+<div class="ui container" id="mensajes">
+    <div class="ui {{mensaje.tags}} message">
+        <i class="close icon"></i>
+        <div class="header">
+            {{mensaje}}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% include 'Inc/footer.html' %}

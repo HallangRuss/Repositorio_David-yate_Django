@@ -1,0 +1,49 @@
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h2 class="ui header">Listado de Ingresos</h2>
+
+    {% if messages %}
+        {% for mensaje in messages %}
+            <div class="ui {{ mensaje.tags }} message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ mensaje }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Instructor</th>
+                <th>Ambiente</th>
+                <th>Fecha/Hora Ingreso</th>
+                <th>Fecha/Hora Salida</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingreso in ingresos %}
+                <tr>
+                    <td>{{ ingreso.instructor.NombreCompleto }}</td>
+                    <td>{{ ingreso.ambiente.NombreAmbiente }}</td>
+                    <td>{{ ingreso.fecha_ingreso }}</td>
+                    <td>{% if ingreso.fecha_salida %}{{ ingreso.fecha_salida }}{% else %}-{% endif %}</td>
+                    <td>
+                        {% if not ingreso.fecha_salida %}
+                            <a href="/Ingresos/MarcarSalida/{{ ingreso.id }}" class="ui red button">Salida</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">No hay registros</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include 'Inc/footer.html' %}

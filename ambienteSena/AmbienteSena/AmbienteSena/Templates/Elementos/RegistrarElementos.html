@@ -1,0 +1,114 @@
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1>Formulario Para Registrar Elementos</h1>
+    <form action="" method="post" enctype="multipart/form-data" id="form-elemento" class="ui form">
+        {% csrf_token %}
+        <div class="three fields">
+            <div class="field">
+                <label for="nombre">Nombre Del Elemento:</label>
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre Del Elemento">
+            </div>
+            <div class="field">
+                <label for="tipo">Tipo De Elemento:</label>
+                <input type="text" name="tipo" id="tipo" placeholder="Tipo De Elemento">
+            </div>
+            <div class="field">
+                <label for="observacion">Observación Del Elemento:</label>
+                <input type="text" name="observacion" id="observacion" placeholder="Observación Del Elemento">
+            </div>
+        </div>
+
+        <div class="two fields">
+            <div class="field">
+                <label for="ambiente">Seleccione Un Ambiente:</label>
+                <select name="ambiente" id="ambiente" class="ui search dropdown">
+                    {% for dato in ambientes %}
+                    <option value="{{ dato.id }}">{{ dato.NombreAmbiente }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label for="foto">Foto Del Elemento:</label>
+                <!-- CORREGIDO: 'name="foto"' -->
+                <input type="file" accept="image/*" name="foto" id="foto" placeholder="Foto Del Elemento">
+            </div>
+        </div>
+
+        <div>
+            <button type="submit" class="ui inverted green button">Guardar Elemento</button>
+        </div>
+    </form>
+</div>
+
+<!-- Mensajes con semantic -->
+{% if messages %}
+    {% for mensaje in messages %}
+    <div class="ui container" id="mensajes">
+        <!-- CORREGIDO: usar mensaje.tags -->
+        <div class="ui {{ mensaje.tags }} message">
+            <i class="close icon"></i>
+            <div class="header">
+                {{ mensaje }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% include 'Inc/footer.html' %}
+
+<script>
+    $(document).ready(function () {
+        $('#form-elemento').form({
+            inline: true,
+            fields: {
+                nombre: {
+                    identifier: 'nombre',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Debe Ingresar El Nombre Del Elemento'
+                        }
+                    ]
+                },
+                tipo: {
+                    identifier: 'tipo',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Debe Ingresar El Tipo Del Elemento'
+                        }
+                    ]
+                },
+                observacion: {
+                    identifier: 'observacion',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Debe Ingresar La(s) Observaciones Del Elemento'
+                        }
+                    ]
+                },
+                ambiente: {
+                    identifier: 'ambiente',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Debe Seleccionar Un Ambiente'
+                        }
+                    ]
+                },
+                foto: {
+                    identifier: 'foto',
+                    rules: [
+                        {
+                            type: 'regExp[/(\.jpg|.jpeg|.png)$/i]',
+                            prompt: 'Debe Cargar Una Imagen Válida (.jpg, .jpeg, .png)'
+                        }
+                    ]
+                }
+            }
+        });
+    });
+</script>

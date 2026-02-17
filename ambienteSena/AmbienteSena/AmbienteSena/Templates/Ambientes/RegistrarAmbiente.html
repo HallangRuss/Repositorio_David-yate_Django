@@ -1,0 +1,81 @@
+{% include 'Inc\header.html' %}
+
+
+
+<div class="ui container">
+  <h1>Formulario para registrar Ambiente de Formacion</h1>
+  <form action="" method="post" id="formambiente" class="ui form">
+    {% csrf_token %}
+    <div class="three fields">
+      <div class="field">
+        <label for="nombre">Nombre del Ambiente</label>
+        <input type="text" name="nombre" id="nombre">
+      </div>
+      <div class="field">
+        <label for="tipo">Tipo de Ambiente</label>
+        <input type="text" name="tipo" id="tipo">
+      </div>
+      <div class="field">
+        <label for="observacion">Observaciones del Ambiente</label>
+        <input type="text" name="observacion" id="observacion">
+      </div>
+    </div>
+    <div>
+      <button type="submit" class="ui inverted green button">Guardar Ambiente</button>
+    </div>
+    <br>
+  </form>
+  </div>
+  {% if messages %}
+  {% for mensaje in messages %}
+  <div class="ui container" id ="mensajes">
+    <div class="ui {{warning.tags}} message">
+      <i class="close icon"></i>
+      <div class="header">
+        {{mensaje}}
+      </div>
+
+    </div>
+    {% endfor %}
+    {% endif %}
+
+  </div>
+
+
+{% include 'Inc\footer.html' %}
+
+<script>
+  $('.ui.form').form({
+    inline: true,
+    fields: {
+      nombre: {
+        identifier: 'nombre',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Este campo es obligatorio'
+          }
+        ]
+      },
+      Tipo: {
+        identifier: 'tipo',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Debe ingresar tipo de ambiente'
+          }
+        ]
+      },
+      observacion: {
+        identifier: 'observacion',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Ingrese las observaciones del ambiente'
+          }
+        ]
+      },
+    }
+  })
+    ;
+</script>

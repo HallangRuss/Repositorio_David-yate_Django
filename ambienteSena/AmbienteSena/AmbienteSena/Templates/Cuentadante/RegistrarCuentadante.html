@@ -1,0 +1,82 @@
+{% include 'Inc/header.html' %}
+
+{% if messages %}
+{% for mensaje in messages %}
+<div class="ui container" id="mensajes">
+    <div class="ui {{mensaje.tags}} message">
+        <i class="close icon"></i>
+        <div class="header">
+            {{mensaje}}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="ui container">
+    <h1>Registrar asignación de cuentadante</h1>
+    <form action="" method="post" class="ui form" id="formulariocuentadante">
+        {% csrf_token %}
+        <div class="two fields">
+            <div class="field">
+                <label for="instructor">Instructor:</label>
+                <select name="instructor" id="instructor" class="ui dropdown">
+                    <option value="">Seleccione instructor</option>
+                    {% for instructor in instructores %}
+                    <option value="{{instructor.id}}">{{instructor.NombreCompleto}} </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="field">
+                <label for="ambiente">Ambiente:</label>
+                <select name="ambiente[]" id="ambiente" class="ui dropdown" >
+                    <option value="">Seleccione los elementos</option>
+                    {% for ambiente in ambinete %}
+                    <option value="{{ambiente.id}}">{{ambiente.NombreAmbiente}} </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="observacion">Observación:</label>
+            <textarea name="observacion" id="observacion"></textarea>
+        </div>
+
+        <button type="submit" class="ui green inverted button">Registrar Cuentadancia</button>
+    </form>
+</div>
+
+{% include 'Inc/footer.html' %}
+
+<script>
+    $('#formulariocuentadante').form({
+        inline: true,
+        fields: {
+            instructor:{
+                identifier: 'instructor',
+                rules:[{
+                    type: 'empty',
+                    prompt: 'Debe seleccionar un instructor'
+                }]
+            },
+            elemento:{
+                identifier: 'elemento',
+                rules:[{
+                    type: 'empty',
+                    prompt: 'Por Favor Seleccione Almenos Un Elemento'
+                }]
+            },
+            observacion:{
+                identifier: 'observacion',
+                rules:[{
+                    type: 'empty',
+                    prompt: 'Debe escribir almenos un texto pequeño en observación'
+                }]
+            }
+
+        }
+    })
+</script>
+

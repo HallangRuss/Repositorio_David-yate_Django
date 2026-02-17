@@ -1,0 +1,73 @@
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1>Listado de Instructores</h1>
+    <table class="ui fixed single line celled table">
+        <thead>
+            <tr>
+                <th>Nombre del Instructor</th>
+                <th>Area de Instructor</th>
+                <th>Celular Instructor</th>
+                <th>Documento de identida Instructor</th>
+                <th class="center aligned">opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instructor in listadoInstructores %}
+            <tr>
+                <td>{{ instructor.NombreCompleto }}</td>
+                <td>{{ instructor.Area }}</td>
+                <td>{{ instructor.Celular }}</td>
+                <td>{{ instructor.Cedula }}</td>
+                <td>
+                    <form action="/Instructores/EliminarInstructor" method="post" id="formulario{{ instructor.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ instructor.id }}">
+                    </form>
+                    <a href="/Instructores/ActualizarInstructor/{{ instructor.id }}"><i class="edit icon"></i></a>
+                    <a href="#" onclick="eliminarinstructor('{{ instructor.id }}')"><i class="trash icon"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function eliminarinstructor(id) {
+        Swal.fire({
+            title: "Alertaaa. ¿Vas a eliminar esto?",
+            text: " Se va a borrar, conste!",
+            icon: "WIUWIUWIU",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sip, Eliminar al instructor :3!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#formulario" + id).submit()
+            }
+        });
+    }
+</script>
+
+<br>
+</form>
+{% if messages %}
+{% for mensaje in messages %}
+<div class="ui container" id="mensajes">
+    <div class="ui {{warning.tags}} message">
+        <i class="close icon"></i>
+        <div class="header">
+            {{mensaje}}
+        </div>
+
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="ui container">
+    </div>
+
+
+
+    {% include 'Inc/footer.html' %}

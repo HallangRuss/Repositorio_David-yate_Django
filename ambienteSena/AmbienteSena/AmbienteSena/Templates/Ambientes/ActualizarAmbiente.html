@@ -1,0 +1,83 @@
+{% include 'Inc\header.html' %}
+
+
+
+<div class="ui container">
+  <h1>Formulario para actualizar Ambiente de Formacion</h1>
+ 
+  <form action="" method="post" id="formambiente" class="ui form">
+    {% csrf_token %}
+    {% for dato in ambiente %}
+    <div class="three fields">
+      <div class="field">
+        <label for="nombre">Nombre del Ambiente</label>
+        <input type="text" name="nombre" id="nombre" value="{{dato.1}}">
+      </div>
+      <div class="field">
+        <label for="tipo">Tipo de Ambiente</label>
+        <input type="text" name="tipo" id="tipo" value="{{dato.2}}">
+      </div>
+      <div class="field">
+        <label for="observacion">Observaciones del Ambiente</label>
+        <input type="text" name="observacion" id="observacion" value="{{dato.3}}">
+      </div>
+    </div>
+    <div>
+      <button type="submit" class="ui inverted green button">actualizar Ambiente</button>
+    </div>
+    <br>
+  </form>
+  {% endfor %}
+  {% if messages %}
+  {% for mensaje in messages %}
+  <div class="ui container" id ="mensajes">
+    <div class="ui {{warning.tags}} message">
+      <i class="close icon"></i>
+      <div class="header">
+        {{mensaje}}
+      </div>
+
+    </div>
+    {% endfor %}
+    {% endif %}
+
+  </div>
+</div>
+
+{% include 'Inc\footer.html' %}
+
+<script>
+  $('.ui.form').form({
+    inline: true,
+    fields: {
+      nombre: {
+        identifier: 'nombre',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Este campo es obligatorio'
+          }
+        ]
+      },
+      Tipo: {
+        identifier: 'tipo',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Este campo es obligatorio'
+          }
+        ]
+      },
+      observacion: {
+        identifier: 'observacion',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Este campo es obligatorio'
+          }
+        ]
+      },
+    }
+  })
+    ;
+</script>

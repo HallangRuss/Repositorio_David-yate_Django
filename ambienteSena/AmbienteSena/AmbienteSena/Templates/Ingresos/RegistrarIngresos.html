@@ -1,0 +1,82 @@
+{% include 'Inc/header.html' %}
+
+{% if messages %}
+{% for mensaje in messages %}
+<div class="ui container" id="mensajes">
+    <div class="ui {{ mensaje.tags }} message">
+        <i class="close icon"></i>
+        <div class="header">{{ mensaje }}</div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="ui container">
+    <h1>Registrar Ingreso</h1>
+
+    <form action="" method="post" class="ui form" id="formularioingreso">
+        {% csrf_token %}
+        <div class="two fields">
+            <div class="field">
+                <label for="instructor">Instructor:</label>
+                <select name="instructor" id="instructor" class="ui dropdown">
+                    <option value="">Seleccione un instructor</option>
+                    {% for instructor in instructores %}
+                    <option value="{{ instructor.id }}">{{ instructor.NombreCompleto }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label for="ambiente">Ambiente:</label>
+                <select name="ambiente" id="ambiente" class="ui dropdown">
+                    <option value="">Seleccione un ambiente</option>
+                    {% for ambiente in ambientes %}
+                    <option value="{{ ambiente.id }}">{{ ambiente.NombreAmbiente }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label for="observacion">Observación:</label>
+            <textarea name="observacion" id="observacion"></textarea>
+        </div>
+        <button type="submit" class="ui green inverted button">Registrar Ingreso</button>
+        <a href="/Ingresos/ListarIngresos" class="ui blue button">Ver Listado</a>
+    </form>
+</div>
+
+{% include 'Inc/footer.html' %}
+
+<script>
+    $('#formularioingreso').form({
+        inline: true,
+        fields: {
+            instructor: {
+                identifier: 'instructor',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Debe seleccionar un Instructor'
+                }]
+            },
+            ambiente: {
+                identifier: 'ambiente',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Debe seleccionar un Ambiente'
+                }]
+            },
+            observacion: {
+                identifier: 'observacion',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Debe escribir al menos un texto en observación'
+                }]
+            }
+        }
+    });
+
+    // Permitir cerrar mensajes
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    });
+</script>
