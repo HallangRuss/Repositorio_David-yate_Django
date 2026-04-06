@@ -129,6 +129,7 @@ USE_TZ = True
 
 # NUEVO: Configuración de estáticos para producción (Paso 4)
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # agregar esta línea
 
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
