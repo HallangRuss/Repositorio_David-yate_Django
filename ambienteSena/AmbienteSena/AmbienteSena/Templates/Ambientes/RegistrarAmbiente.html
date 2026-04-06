@@ -26,10 +26,9 @@
 
   <br>
 
-  <!-- Bloque de Mensajes Corregido -->
   {% if messages %}
     {% for mensaje in messages %}
-      <div class="ui {{ mensaje.tags }} message"> <!-- CAMBIO: mensaje.tags -->
+      <div class="ui {{ mensaje.tags }} message">
         <i class="close icon"></i>
         <div class="header">
           {{ mensaje }}
@@ -37,7 +36,7 @@
       </div>
     {% endfor %}
   {% endif %}
-</div> <!-- Este cierra el ui container principal -->
+</div>
 
 {% include 'Inc/footer.html' %}
 
@@ -45,22 +44,12 @@
   $('.ui.form').form({
     inline: true,
     fields: {
-      nombre: {
-        identifier: 'nombre',
-        rules: [{ type: 'empty', prompt: 'Este campo es obligatorio' }]
-      },
-      tipo: { // Cambiado a minúscula para coincidir con el name del input
-        identifier: 'tipo',
-        rules: [{ type: 'empty', prompt: 'Debe ingresar tipo de ambiente' }]
-      },
-      observacion: {
-        identifier: 'observacion',
-        rules: [{ type: 'empty', prompt: 'Ingrese las observaciones del ambiente' }]
-      },
+      nombre: { identifier: 'nombre', rules: [{ type: 'empty', prompt: 'Nombre obligatorio' }] },
+      tipo: { identifier: 'tipo', rules: [{ type: 'empty', prompt: 'Tipo obligatorio' }] },
+      observacion: { identifier: 'observacion', rules: [{ type: 'empty', prompt: 'Observación obligatoria' }] },
     }
   });
 
-  // Para que el botón de cerrar mensaje funcione
   $('.message .close').on('click', function() {
     $(this).closest('.message').transition('fade');
   });

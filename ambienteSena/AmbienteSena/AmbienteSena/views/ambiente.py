@@ -7,23 +7,22 @@ def RegistrarAmbiente(request):
         nombre = request.POST.get('nombre')
         tipo = request.POST.get('tipo')
         observacion = request.POST.get('observacion')
-        if nombre and tipo and observacion:
-            try:
-                with connection.cursor() as cursor:
-                    # Usamos execute para llamar al procedimiento de inserción
-                    cursor.execute('CALL sp_insertarambiente(%s, %s, %s)', [nombre, tipo, observacion])
-                messages.success(request, 'Ambiente registrado correctamente')
-                return redirect('/Ambientes/ListaAmbientes')
-            except Exception as e:
-                messages.error(request, f'Error en la base de datos: {e}')
-                return redirect('/Ambientes/RegistrarAmbiente')
+        try:
+            with connection.cursor() as cursor:
+                # Usamos execute para llamar al procedimiento
+                cursor.execute('CALL sp_insertarambiente(%s, %s, %s)', [nombre, tipo, observacion])
+            messages.success(request, 'Ambiente registrado correctamente')
+            return redirect('/Ambientes/ListaAmbientes')
+        except Exception as e:
+            messages.error(request, f'Error en la base de datos: {e}')
+            return redirect('/Ambientes/RegistrarAmbiente')
     
+    # El GET: Asegúrate que la carpeta sea 'Ambientes' (A mayúscula)
     return render(request, 'Ambientes/RegistrarAmbiente.html')
 
 def ListarAmbientes(request):
     try:
         with connection.cursor() as cursor:
-            # En Linux/Render es más seguro usar execute('CALL...') para obtener filas
             cursor.execute('CALL sp_listarambientes()')
             ambientes = cursor.fetchall()
         return render(request, 'Ambientes/ListaAmbientes.html', {'ambientes': ambientes})
