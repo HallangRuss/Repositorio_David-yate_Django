@@ -24,7 +24,7 @@ RUTA_IMAGENES_ELEMENTOS = BASE_DIR / 'AmbienteSena' / 'Public' / 'Img' / 'elemen
 SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-kj7l)0lu4&65=8u0m#vsh+vt#kc7lipc+i0a$_4-zx#sq7$#0g')
 
 # NUEVO: DEBUG se apaga automáticamente en Render
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
 # NUEVO: Configuración de Hosts permitidos
 ALLOWED_HOSTS = ['127.0.0.1','localhost','10.3.129.163']
