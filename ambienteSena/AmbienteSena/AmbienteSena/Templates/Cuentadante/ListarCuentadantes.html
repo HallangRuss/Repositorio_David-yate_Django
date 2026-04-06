@@ -1,0 +1,132 @@
+{% include 'Inc/header.html' %}
+
+{% if messages %}
+{% for mensaje in messages %}
+<div class="ui container" id="mensajes">
+    <div class="ui {{mensaje.tags}} message">
+        <i class="close icon"></i>
+        <div class="header">{{mensaje}}</div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="ui container">
+    <h1>Listado De Cuentadantes</h1>
+    <table class="ui selectable celled table">
+        <thead>
+            <tr>
+                <th>Cuentadante</th>
+                <th>Área Instructor</th>
+                <th>Ambiente Asignado</th>
+                <th>Fecha De Asignación</th>
+                <th>Observación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asignacion in asignaciones %}
+            <tr>
+                <td>{{ asignacion.instructor.NombreCompleto }}</td>
+                <td>{{ asignacion.instructor.Area }}</td>
+                <td>{{ asignacion.ambiente.NombreAmbiente }}</td>
+                <td>{{ asignacion.fechaasignacion }}</td>
+                <td>{{ asignacion.observacion }}</td>
+                <td>
+                    <form action="/Cuentadante/EliminarCuentadante" method="post" id="formulario-{{asignacion.id}}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{asignacion.id}}">
+                    </form>
+
+                    <a href="#" onclick="eliminarCuentadante('{{asignacion.id}}')">
+                        <i class="trash alternate red icon"></i>
+                    </a>
+                    <a href="#" onclick="abrirVentanaModal('{{asignacion.id}}')">
+                        <i class="edit alternate blue icon"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="center aligned">NO HAY CUENTADANTES REGISTRADOS</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="ui modal" id="modalActualizarCuentadante">
+    <i class="close icon"></i>
+    <div class="header">Actualizar Asignación de Ambiente</div>
+    <div class="content">
+        <form method="post" class="ui form" id="formulario-cuentadante">
+            {% csrf_token %}
+            <div class="ui red message" id="mensaje-id" style="display:none;"></div>
+            <input type="hidden" name="id_cuentadante" id="id_cuentadante">
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Instructor</label>
+                    <select name="instructor" id="instructor_modal" class="ui dropdown">
+                        {% for instructor in instructores %}
+                        <option value="{{instructor.id}}">{{instructor.NombreCompleto}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Ambiente</label>
+                    <select name="ambiente" id="ambiente_modal" class="ui dropdown">
+                        {% for ambiente in ambientes %}
+                        <option value="{{ambiente.id}}">{{ambiente.NombreAmbiente}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Observación</label>
+                <textarea name="observacion" id="observacion_modal"></textarea>
+            </div>
+
+            <div class="actions">
+                <div class="ui black deny button">Cancelar</div>
+                <button type="submit" class="ui inverted green button">
+                    Actualizar Asignación <i class="checkmark icon"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function eliminarCuentadante(id) {
+        Swal.fire({
+            title: "¿Eliminar este Cuentadante?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("formulario-" + id).submit();
+            }
+        });
+    }
+
+    function abrirVentanaModal(id) {
+        let msg = document.getElementById("mensaje-id");
+        msg.style.display = "block";
+        msg.innerHTML = "Editando ID: <b>" + id + "</b>";
+
+        $('#modalActualizarCuentadante').modal('show');
+
+        fetch('/Cuentadante/APIConsultarCuentadante/' + id)
+            .then(res => res.json())
+            .then(datos => {
+                document.getElementById('id_cuentadante').value = id;
+                $('#instructor_modal').dropdown('set selected', String(datos[0].fields.instructor));
+                $('#ambiente_modal').dropdown('set selected', String(datos[0].fields.ambiente));
+                document.getElementById('observacion_modal').value = datos[0].fields.observacion;
+            });
+    }
+</script>
+{% include 'Inc/footer.html' %}

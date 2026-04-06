@@ -3,19 +3,20 @@
 {% include 'Inc/header.html' %}
 <div class="container">
     {% if messages %}
-    {% for mensaje in messages %}
-    <div class="ui container" id="mensajes">
-        <div class="ui {{warning.tags}} message">
-            <i class="close icon"></i>
-            <div class="header">
-                {{mensaje}}
+        {% for mensaje in messages %}
+        <div class="ui container" id="mensajes">
+            <div class="ui {{ mensaje.tags }} message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ mensaje }}
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
     {% endif %}
 
     <h1>Listado De Elementos :D</h1>
+    
     <div class="ui link cards">
         {% for dato in listadoelementos %}
         <div class="card">
@@ -31,201 +32,143 @@
                 <div class="description">
                     {{ dato.Observacion }}
                     <hr>
-                    Nombre del Ambiente: {{dato.ambiente.NombreAmbiente}}
-                    <hr>
-                    Tipo de Ambiente: {{dato.ambiente.TipoAmbiente}}
+                    <strong>Ambiente:</strong> {{ dato.ambiente.NombreAmbiente }}
+                    <br>
+                    <strong>Tipo:</strong> {{ dato.ambiente.TipoAmbiente }}
                 </div>
             </div>
             <div class="extra content">
-                <!-- FORMULARIO PARA ELIMINAR -->
                 <form action="/Elementos/EliminarElemento" method="post" id="formulario{{dato.id}}">
                     {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{dato.id}}">
+                    <input type="hidden" name="id" value="{{dato.id}}">
                 </form>
-                <!-- FORMULARIO PARA ACTUALIZAR -->
-                <a href="#" onclick="abrirModal('{{dato.id}}') " class="ui inverted pink button"><i
-                        class="edit outline icon"></i>Editar
-                </a>
-                <a href="#" onclick="eliminarElemento('{{dato.id}}') " class="ui inverted red button"><i
-                        class="outline trash alternate icon"></i>Eliminar
-                </a>
+
+                <div class="ui two buttons">
+                    <button onclick="abrirModal('{{dato.id}}')" class="ui inverted pink button">
+                        <i class="edit outline icon"></i> Editar
+                    </button>
+                    <button onclick="eliminarElemento('{{dato.id}}')" class="ui inverted red button">
+                        <i class="outline trash alternate icon"></i> Eliminar
+                    </button>
+                </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<!-- INICIA VENTANA MODAL -->
 <div class="ui modal" id="modalActualizarElemento">
     <i class="close icon"></i>
     <div class="header">
-        Formulario Para Editar Elementos
+        Actualizar Información del Elemento
     </div>
     <div class="image content">
         <div class="ui medium image">
-            <img src="" id="foto-anterior">
+            <img src="" id="foto-anterior" class="ui rounded image">
         </div>
-        <div class="description">
-            <div class="ui container">
+        <div class="description" style="width: 100%;">
+            <form action="/Elementos/ActualizarElemento" method="post" enctype="multipart/form-data" id="form-elemento" class="ui form">
+                {% csrf_token %}
+                
+                <input type="hidden" name="idelemento" id="idelemento">
 
-                <form action="/Elementos/ActualizarElemento" method="post" enctype="multipart/form-data"
-                    id="form-elemento" class="ui form">
-                    {% csrf_token %}
-                    <div class="three fields">
-                        <div class="field">
-                            <label for="nombre">Nombre Del Elemento:</label>
-                            <input type="text" name="nombre" id="nombre">
-                            <input type="text" name="idelemento" id="idelemento">
-                        </div>
-                        <div class="field">
-                            <label for="tipo">Tipo De Elemento:</label>
-                            <input type="text" name="tipo" id="tipo">
-                        </div>
-                        <div class="field">
-                            <label for="observacion">Observación Del Elemento:</label>
-                            <input type="text" name="observacion" id="observacion">
-                        </div>
-                    </div>
+                <div class="field">
+                    <label for="nombre">Nombre Del Elemento:</label>
+                    <input type="text" name="nombre" id="nombre">
+                </div>
 
-                    <div class="two fields">
-                        <div class="field">
-                            <label for="ambiente">Seleccione Un Ambiente:</label>
-                            <select name="ambiente" id="ambiente" class="ui search dropdown">
-                                {% for dato in ambientes %}
-                                <option value="{{ dato.id }}">{{ dato.NombreAmbiente }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="foto">Foto Del Elemento:</label>
-                            <input type="file" accept="image/*" name="foto" id="foto" placeholder="Foto Del Elemento">
-                            <input type="hidden" name="nombre-foto" id="nombre-foto">
-                        </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="tipo">Tipo De Elemento:</label>
+                        <input type="text" name="tipo" id="tipo">
                     </div>
+                    <div class="field">
+                        <label for="observacion">Observación:</label>
+                        <input type="text" name="observacion" id="observacion">
+                    </div>
+                </div>
 
-                    <div>
-                        <button type="submit" class="ui inverted green button">Actualizar Elemento</button>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="ambiente">Ambiente de Formación:</label>
+                        <select name="ambiente" id="ambiente" class="ui search dropdown">
+                            {% for dato in ambientes %}
+                            <option value="{{ dato.id }}">{{ dato.NombreAmbiente }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                </form>
-            </div>
+                    <div class="field">
+                        <label for="foto">Cambiar Foto (Opcional):</label>
+                        <input type="file" accept="image/*" name="foto" id="foto">
+                        <input type="hidden" name="nombre-foto" id="nombre-foto">
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <button type="submit" class="ui inverted green button">Guardar Cambios</button>
+                </div>
+            </form>
         </div>
     </div>
-    <!-- <div class="actions">
-        <div class="ui black deny button">
-            Nope
-        </div>
-        <div class="ui positive right labeled icon button">
-            Yep, that's me
-            <i class="checkmark icon"></i>
-        </div>
-    </div> -->
 </div>
-<!-- FINAL VENTANA MODAL -->
 
 {% include 'Inc/footer.html' %}
 
-<!-- SCRIPTS NECESARIOS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.js"></script>
-
 <script>
+    // Función para cargar los datos en el Modal mediante la API
     function abrirModal(id) {
-        $('#modalActualizarElemento')
-            .modal({
-                transition: 'horizontal flip'
-            })
-            .modal('show');
-        // URL CON LA RUTA DE LA API
-        let url = "/Elementos/APIConsultarElemento/" + id
+        let url = "/Elementos/APIConsultarElemento/" + id;
 
         fetch(url)
-            .then(datos => datos.json())
+            .then(res => res.json())
             .then(datos => {
-                console.log(datos);
+                document.getElementById('idelemento').value = id;
                 document.getElementById('nombre').value = datos[0].fields.Nombre;
                 document.getElementById('tipo').value = datos[0].fields.Tipo;
                 document.getElementById('observacion').value = datos[0].fields.Observacion;
-                document.getElementById('ambiente').value = datos[0].fields.ambiente;
-                document.getElementById('foto-anterior').src = "{% static 'Img/elementos/' %}" + datos[0].fields.Foto;
                 document.getElementById('nombre-foto').value = datos[0].fields.Foto;
-                document.getElementById('idelemento').value = id;
-
-                //CARGAR DATOS EN EL SELECT//
-                $('#ambiente').dropdown('set selected', String(datos[0].fields.ambiente))
-            })
+                document.getElementById('foto-anterior').src = "{% static 'Img/elementos/' %}" + datos[0].fields.Foto;
+                
+                // Activar el dropdown de Semantic UI con el valor correcto
+                $('#ambiente').dropdown('set selected', String(datos[0].fields.ambiente));
+                
+                // Mostrar el modal
+                $('#modalActualizarElemento').modal('show');
+            });
     }
 
-    // VALIDACION DE DATOS DE ENTRADA //
+    // Validación del formulario
     $(document).ready(function () {
-        $('#form-elemento').form({
-            inline: true,
+        $('.ui.form').form({
             fields: {
-                nombre: {
-                    identifier: 'nombre',
-                    rules: [
-                        {
-                            type: 'empty',
-                            prompt: 'Debe Ingresar El Nombre Del Elemento'
-                        }
-                    ]
-                },
-                tipo: {
-                    identifier: 'tipo',
-                    rules: [
-                        {
-                            type: 'empty',
-                            prompt: 'Debe Ingresar El Tipo Del Elemento'
-                        }
-                    ]
-                },
-                observacion: {
-                    identifier: 'observacion',
-                    rules: [
-                        {
-                            type: 'empty',
-                            prompt: 'Debe Ingresar La(s) Observaciones Del Elemento'
-                        }
-                    ]
-                },
-                ambiente: {
-                    identifier: 'ambiente',
-                    rules: [
-                        {
-                            type: 'empty',
-                            prompt: 'Debe Seleccionar Un Ambiente'
-                        }
-                    ]
-                },
-                // foto: {
-                //     identifier: 'foto',
-                //     rules: [
-                //         {
-                //             type: 'regExp[/(\.jpg|.jpeg|.png)$/i]',
-                //             prompt: 'Debe Cargar Una Imagen Válida (.jpg, .jpeg, .png)'
-                //         }
-                //     ]
-                // }
+                nombre: { identifier: 'nombre', rules: [{ type: 'empty', prompt: 'Ingrese nombre' }] },
+                tipo: { identifier: 'tipo', rules: [{ type: 'empty', prompt: 'Ingrese tipo' }] },
+                observacion: { identifier: 'observacion', rules: [{ type: 'empty', prompt: 'Ingrese observación' }] },
+                ambiente: { identifier: 'ambiente', rules: [{ type: 'empty', prompt: 'Seleccione ambiente' }] }
             }
+        });
+        
+        // Cerrar mensajes de alerta
+        $('.message .close').on('click', function() {
+            $(this).closest('.message').transition('fade');
         });
     });
 
-    // ###FUNCION PARA ELIMINAR ELEMENTO###
-    function eliminarElemento(id){
-        // alert('El id es' + id)
-        swal.fire({
-            title: '¿Esta Segur De Eliminar Este Elemento?',
-            text: '!Al eliminar este Elemento, No podra recuperarlo!!',
+    // Función SweetAlert para eliminar
+    function eliminarElemento(id) {
+        Swal.fire({
+            title: '¿Eliminar elemento?',
+            text: "Esta acción no se puede deshacer",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Eliminar',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
-            if(result.isConfirmed){
-                $('#formulario' + id).submit()
+            if (result.isConfirmed) {
+                document.getElementById('formulario' + id).submit();
             }
-        })
+        });
     }
-
 </script>

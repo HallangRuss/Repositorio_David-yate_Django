@@ -61,7 +61,7 @@ ROOT_URLCONF = 'AmbienteSena.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['AmbienteSena\Templates'],
+        'DIRS': ['AmbienteSena\\Templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS =[
-    'AmbienteSena\Public'
+    'AmbienteSena\\Public'
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
