@@ -1,9 +1,8 @@
 {% include 'Inc/header.html' %}
 
-
-
 <div class="ui container">
-  <h1>Formulario para registrar Ambiente de Formacion</h1>
+  <h1>Formulario para registrar Ambiente de Formación</h1>
+  
   <form action="" method="post" id="formambiente" class="ui form">
     {% csrf_token %}
     <div class="three fields">
@@ -23,24 +22,22 @@
     <div>
       <button type="submit" class="ui inverted green button">Guardar Ambiente</button>
     </div>
-    <br>
   </form>
-  </div>
+
+  <br>
+
+  <!-- Bloque de Mensajes Corregido -->
   {% if messages %}
-  {% for mensaje in messages %}
-  <div class="ui container" id ="mensajes">
-    <div class="ui {{warning.tags}} message">
-      <i class="close icon"></i>
-      <div class="header">
-        {{mensaje}}
+    {% for mensaje in messages %}
+      <div class="ui {{ mensaje.tags }} message"> <!-- CAMBIO: mensaje.tags -->
+        <i class="close icon"></i>
+        <div class="header">
+          {{ mensaje }}
+        </div>
       </div>
-
-    </div>
     {% endfor %}
-    {% endif %}
-
-  </div>
-
+  {% endif %}
+</div> <!-- Este cierra el ui container principal -->
 
 {% include 'Inc/footer.html' %}
 
@@ -50,32 +47,21 @@
     fields: {
       nombre: {
         identifier: 'nombre',
-        rules: [
-          {
-            type: 'empty',
-            prompt: 'Este campo es obligatorio'
-          }
-        ]
+        rules: [{ type: 'empty', prompt: 'Este campo es obligatorio' }]
       },
-      Tipo: {
+      tipo: { // Cambiado a minúscula para coincidir con el name del input
         identifier: 'tipo',
-        rules: [
-          {
-            type: 'empty',
-            prompt: 'Debe ingresar tipo de ambiente'
-          }
-        ]
+        rules: [{ type: 'empty', prompt: 'Debe ingresar tipo de ambiente' }]
       },
       observacion: {
         identifier: 'observacion',
-        rules: [
-          {
-            type: 'empty',
-            prompt: 'Ingrese las observaciones del ambiente'
-          }
-        ]
+        rules: [{ type: 'empty', prompt: 'Ingrese las observaciones del ambiente' }]
       },
     }
-  })
-    ;
+  });
+
+  // Para que el botón de cerrar mensaje funcione
+  $('.message .close').on('click', function() {
+    $(this).closest('.message').transition('fade');
+  });
 </script>

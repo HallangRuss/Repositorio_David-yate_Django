@@ -10,21 +10,21 @@ def RegistrarAmbiente(request):
         if nombre and tipo and observacion:
             try:
                 with connection.cursor() as cursor:
-                    # Usamos el nombre exacto del SP que creamos en PHPMyAdmin
-                    cursor.callproc('sp_insertarambiente', [nombre, tipo, observacion])
+                    # Usamos execute para llamar al procedimiento de inserción
+                    cursor.execute('CALL sp_insertarambiente(%s, %s, %s)', [nombre, tipo, observacion])
                 messages.success(request, 'Ambiente registrado correctamente')
                 return redirect('/Ambientes/ListaAmbientes')
             except Exception as e:
                 messages.error(request, f'Error en la base de datos: {e}')
                 return redirect('/Ambientes/RegistrarAmbiente')
     
-    # IMPORTANTE: Verifica que la carpeta en VS Code se llame 'Ambientes' (con A mayúscula)
     return render(request, 'Ambientes/RegistrarAmbiente.html')
 
 def ListarAmbientes(request):
     try:
         with connection.cursor() as cursor:
-            cursor.callproc('sp_listarambientes')
+            # En Linux/Render es más seguro usar execute('CALL...') para obtener filas
+            cursor.execute('CALL sp_listarambientes()')
             ambientes = cursor.fetchall()
         return render(request, 'Ambientes/ListaAmbientes.html', {'ambientes': ambientes})
     except Exception as e:
@@ -36,7 +36,7 @@ def EliminarAmbiente(request):
         id_amb = request.POST.get('id')
         try:
             with connection.cursor() as cursor:
-                cursor.callproc('sp_eliminarambiente', [id_amb])
+                cursor.execute('CALL sp_eliminarambiente(%s)', [id_amb])
             messages.success(request, 'Ambiente eliminado')
         except Exception as e:
             messages.error(request, f'Error: {e}')
@@ -49,7 +49,7 @@ def ActualizarAmbiente(request, id_ambiente):
         obs = request.POST.get('observacion')
         try:
             with connection.cursor() as cursor:
-                cursor.callproc('sp_actualizarambiente', [id_ambiente, nombre, tipo, obs])
+                cursor.execute('CALL sp_actualizarambiente(%s,%s,%s,%s)', [id_ambiente, nombre, tipo, obs])
             messages.success(request, 'Ambiente actualizado')
             return redirect('/Ambientes/ListaAmbientes')
         except Exception as e:
@@ -57,6 +57,6 @@ def ActualizarAmbiente(request, id_ambiente):
             return redirect('/Ambientes/ListaAmbientes')
             
     with connection.cursor() as cursor:
-        cursor.callproc('sp_consultarambiente', [id_ambiente])
+        cursor.execute('CALL sp_consultarambiente(%s)', [id_ambiente])
         ambiente = cursor.fetchone()
     return render(request, 'Ambientes/ActualizarAmbiente.html', {'ambiente': ambiente})
