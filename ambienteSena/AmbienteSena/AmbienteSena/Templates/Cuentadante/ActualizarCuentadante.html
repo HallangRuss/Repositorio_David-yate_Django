@@ -1,0 +1,50 @@
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1>Actualizar Asignación de Ambiente</h1>
+
+    {% if messages %}
+        {% for mensaje in messages %}
+        <div class="ui {{ mensaje.tags }} message">
+            <i class="close icon"></i>
+            <div class="header">{{ mensaje }}</div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action="" method="post" class="ui form">
+        {% csrf_token %}
+        <div class="two fields">
+            <div class="field">
+                <label>Instructor</label>
+                <select name="instructor" class="ui dropdown">
+                    {% for instructor in instructores %}
+                    <option value="{{ instructor.id }}" 
+                        {% if instructor.id == cuentadante.instructor.id %}selected{% endif %}>
+                        {{ instructor.NombreCompleto }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Ambiente</label>
+                <select name="ambiente" class="ui dropdown">
+                    {% for ambiente in ambientes %}
+                    <option value="{{ ambiente.id }}"
+                        {% if ambiente.id == cuentadante.ambiente.id %}selected{% endif %}>
+                        {{ ambiente.NombreAmbiente }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label>Observación</label>
+            <textarea name="observacion">{{ cuentadante.observacion }}</textarea>
+        </div>
+        <button type="submit" class="ui green inverted button">Actualizar Asignación ✔</button>
+        <a href="/Cuentadante/ListarCuentadantes" class="ui black button">Cancelar</a>
+    </form>
+</div>
+
+{% include 'Inc/footer.html' %}
