@@ -57,6 +57,31 @@ def EliminarCuentadante(request):
             cuentadante.delete()
     return redirect('/Cuentadante/ListarCuentadantes')
 
+def ActualizarCuentadante(request, id_cuentadante):
+    cuentadante = get_object_or_404(Cuentadante, id=id_cuentadante)
+    if request.method == 'POST':
+        instructor_id = request.POST.get('instructor')
+        ambiente_id = request.POST.get('ambiente')
+        observacion = request.POST.get('observacion')
+        try:
+            cuentadante.instructor = get_object_or_404(Instructor, id=instructor_id)
+            cuentadante.ambiente = get_object_or_404(Ambiente, id=ambiente_id)
+            cuentadante.observacion = observacion
+            cuentadante.save()
+            messages.success(request, 'Asignación actualizada correctamente.')
+            return redirect('/Cuentadante/ListarCuentadantes')
+        except Exception as e:
+            messages.error(request, f'Error al actualizar: {e}')
+            return redirect('/Cuentadante/ListarCuentadantes')
+    
+    listadoInstructores = Instructor.objects.all().order_by('NombreCompleto')
+    listadoAmbientes = Ambiente.objects.all().order_by('NombreAmbiente')
+    return render(request, 'Cuentadante/ActualizarCuentadante.html', {
+        'cuentadante': cuentadante,
+        'instructores': listadoInstructores,
+        'ambientes': listadoAmbientes
+    })
+
 def APIConsultarCuentadante(request, id_cuentadante):
     un_cuentadante = Cuentadante.objects.filter(id = id_cuentadante)
     cuentadante_json = serialize('json', un_cuentadante)

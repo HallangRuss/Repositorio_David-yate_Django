@@ -5,3 +5,4 @@ from .instructor import RegistrarInstructor, ListarInstructores, EliminarInstruc
 from .elemento import RegistrarElemento,ListarElementos,APIConsultarElemento,ActualizarElemento,EliminarElemento
 from .cuentadante import RegistrarCuentadante, ListarCuentadantes, EliminarCuentadante, APIConsultarCuentadante
 from .ingreso import ListarIngreso,RegistrarIngreso,MarcarSalida,APIConsultarIngreso
+from .cuentadante import RegistrarCuentadante, ListarCuentadantes, EliminarCuentadante, APIConsultarCuentadante, ActualizarCuentadante

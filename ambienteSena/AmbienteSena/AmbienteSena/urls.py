@@ -22,7 +22,7 @@ from .views import RegistrarAmbiente, ListarAmbientes, EliminarAmbiente, Actuali
 from .views import RegistrarInstructor, ListarInstructores, EliminarInstructor , ActualizarInstructor
 from .views import RegistrarElemento,ListarElementos,APIConsultarElemento,ActualizarElemento,EliminarElemento
 from .views import RegistrarCuentadante,ListarCuentadantes,EliminarCuentadante,APIConsultarCuentadante
-from .views import RegistrarIngreso,ListarIngreso,MarcarSalida,APIConsultarIngreso
+from .views import RegistrarIngreso,ListarIngreso,MarcarSalida,APIConsultarIngreso,ActualizarCuentadante
 
 urlpatterns = [
     path('',home),
@@ -47,5 +47,6 @@ urlpatterns = [
     path('Ingresos/RegistrarIngresos', RegistrarIngreso),
     path('Ingresos/ListarIngresos', ListarIngreso),
     path('Ingresos/MarcarSalida/<int:ingreso_id>', MarcarSalida),
-    path('Ingresos/APIConsultarIngreso/<int:id_ingreso>', APIConsultarIngreso)
+    path('Ingresos/APIConsultarIngreso/<int:id_ingreso>', APIConsultarIngreso),
+    path('Cuentadante/ActualizarCuentadante/<int:id_cuentadante>', ActualizarCuentadante),
 ]
