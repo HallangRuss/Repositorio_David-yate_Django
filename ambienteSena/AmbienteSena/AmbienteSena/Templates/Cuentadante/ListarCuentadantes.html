@@ -37,7 +37,6 @@
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{asignacion.id}}">
                     </form>
-
                     <a href="#" onclick="eliminarCuentadante('{{asignacion.id}}')">
                         <i class="trash alternate red icon"></i>
                     </a>
@@ -59,11 +58,10 @@
     <i class="close icon"></i>
     <div class="header">Actualizar Asignación de Ambiente</div>
     <div class="content">
-        <form method="post" class="ui form" id="formulario-cuentadante">
+        <form method="post" class="ui form" id="formulario-cuentadante" action="">
             {% csrf_token %}
             <div class="ui red message" id="mensaje-id" style="display:none;"></div>
             <input type="hidden" name="id_cuentadante" id="id_cuentadante">
-
             <div class="two fields">
                 <div class="field">
                     <label>Instructor</label>
@@ -82,12 +80,10 @@
                     </select>
                 </div>
             </div>
-
             <div class="field">
                 <label>Observación</label>
                 <textarea name="observacion" id="observacion_modal"></textarea>
             </div>
-
             <div class="actions">
                 <div class="ui black deny button">Cancelar</div>
                 <button type="submit" class="ui inverted green button">
@@ -116,6 +112,8 @@
         let msg = document.getElementById("mensaje-id");
         msg.style.display = "block";
         msg.innerHTML = "Editando ID: <b>" + id + "</b>";
+
+        document.getElementById('formulario-cuentadante').action = '/Cuentadante/ActualizarCuentadante/' + id;
 
         $('#modalActualizarCuentadante').modal('show');
 
